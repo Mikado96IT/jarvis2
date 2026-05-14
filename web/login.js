@@ -1,96 +1,117 @@
-// ===== LOGIN HANDLER =====
-document.addEventListener("DOMContentLoaded", () => {
-  const loginForm = document.getElementById("loginForm");
-  const loginScreen = document.getElementById("loginScreen");
-  const hudScreen = document.getElementById("hudScreen");
-  const loginError = document.getElementById("loginError");
-  const usernameInput = document.getElementById("username");
-  const passwordInput = document.getElementById("password");
+// Login Manager
+const loginManager = {
+  credentials: {
+    admin: 'jarvis',
+  },
 
-  // Controlla se utente è già loggato nel sessionStorage
-  if (sessionStorage.getItem("jarvis_authenticated")) {
-    showHUD();
-  }
+  init() {
+    this.checkSession();
+    this.setupEventListeners();
+  },
 
-  loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    loginError.textContent = "";
+  checkSession() {
+    const session = sessionStorage.getItem('jarvisSession');
+    if (session) {
+      this.showHUD();
+    } else {
+      this.showLogin();
+    }
+  },
 
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
+  setupEventListeners() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+      loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+    }
+
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    
+    if (usernameInput) {
+      usernameInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') passwordInput?.focus();
+      });
+    }
+    
+    if (passwordInput) {
+      passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') this.handleLogin(e);
+      });
+    }
+  },
+
+  async handleLogin(event) {
+    event.preventDefault();
+
+    const username = document.getElementById('username')?.value || '';
+    const password = document.getElementById('password')?.value || '';
+    const errorMsg = document.getElementById('loginError');
 
     if (!username || !password) {
-      showError("Inserisci username e password");
+      this.showError(errorMsg, 'Username e password richiesti');
       return;
     }
 
-    // Verifica semplice (modifica con logica backend se necessario)
-    // Per demo: username="admin", password="jarvis"
-    if (username === "admin" && password === "jarvis") {
-      // Salva sessione
-      sessionStorage.setItem("jarvis_authenticated", "true");
-      sessionStorage.setItem("jarvis_user", username);
-
-      // Transizione verso HUD
-      animateLoginExit();
-      setTimeout(() => {
-        showHUD();
-      }, 600);
+    if (this.credentials[username] === password) {
+      sessionStorage.setItem('jarvisSession', JSON.stringify({ username, timestamp: Date.now() }));
+      this.transitionToHUD();
     } else {
-      showError("Credenziali non valide");
-      shakeLoginForm();
+      this.shakeError();
+      this.showError(errorMsg, 'Credenziali non valide');
+      document.getElementById('password').value = '';
     }
-  });
+  },
 
-  function showError(message) {
-    loginError.textContent = message;
-    loginError.style.animation = "none";
+  showError(element, message) {
+    if (!element) return;
+    element.textContent = message;
+    element.style.opacity = '1';
     setTimeout(() => {
-      loginError.style.animation = "shake 0.4s ease";
-    }, 10);
-  }
+      element.style.opacity = '0';
+    }, 3000);
+  },
 
-  function shakeLoginForm() {
-    const form = document.querySelector(".login-form");
-    form.style.animation = "none";
-    setTimeout(() => {
-      form.style.animation = "shake 0.4s ease";
-    }, 10);
-  }
+  shakeError() {
+    const loginBox = document.getElementById('loginBox');
+    if (loginBox) {
+      loginBox.style.animation = 'none';
+      setTimeout(() => {
+        loginBox.style.animation = 'loginShake 0.4s';
+      }, 10);
+    }
+  },
 
-  function animateLoginExit() {
-    loginScreen.style.animation = "loginFadeOut 0.6s ease-in forwards";
-  }
+  showLogin() {
+    const loginScreen = document.getElementById('loginScreen');
+    const hudScreen = document.getElementById('hudScreen');
+    if (loginScreen) loginScreen.classList.add('visible');
+    if (hudScreen) hudScreen.classList.remove('visible');
+  },
 
-  function showHUD() {
-    loginScreen.classList.add("hidden");
-    hudScreen.style.display = "block";
-    setTimeout(() => {
-      hudScreen.style.opacity = "1";
-    }, 10);
-  }
+  showHUD() {
+    const loginScreen = document.getElementById('loginScreen');
+    const hudScreen = document.getElementById('hudScreen');
+    if (loginScreen) loginScreen.classList.remove('visible');
+    if (hudScreen) hudScreen.classList.add('visible');
+  },
 
-  // Logout handler (opzionale - aggiungi un pulsante logout se vuoi)
-  window.logout = () => {
-    sessionStorage.removeItem("jarvis_authenticated");
-    sessionStorage.removeItem("jarvis_user");
+  transitionToHUD() {
+    const loginScreen = document.getElementById('loginScreen');
+    if (loginScreen) {
+      loginScreen.style.animation = 'loginFadeOut 0.8s ease-in forwards';
+      setTimeout(() => this.showHUD(), 800);
+    }
+  },
+
+  logout() {
+    sessionStorage.removeItem('jarvisSession');
     location.reload();
-  };
-});
+  },
+};
 
-// Aggiungi stile per animazione logout
-const style = document.createElement("style");
-style.textContent = `
-  @keyframes loginFadeOut {
-    from {
-      opacity: 1;
-      visibility: visible;
-    }
-    to {
-      opacity: 0;
-      visibility: hidden;
-      transform: scale(0.98);
-    }
-  }
-`;
-document.head.appendChild(style);
+// Initialize on DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => loginManager.init());
+} else {
+  loginManager.init();
+}
