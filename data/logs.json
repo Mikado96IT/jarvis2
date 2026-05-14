@@ -1,0 +1,73 @@
+[
+  {
+    "id": "eb744fb0-1d7e-40cc-9704-87ec29e1dd7c",
+    "ts": "2026-05-14T12:45:05.118276+00:00",
+    "level": "info",
+    "message": "Comando eseguito: Get-Date",
+    "payload": {
+      "returncode": 0
+    }
+  },
+  {
+    "id": "5f362e2a-ab0a-4f99-98ae-3b02bfd778f6",
+    "ts": "2026-05-14T12:44:46.045442+00:00",
+    "level": "info",
+    "message": "JARVIS avviato",
+    "payload": null
+  },
+  {
+    "id": "5665482a-be40-4867-aa22-6e0a613fe9c8",
+    "ts": "2026-05-14T12:41:22.165355+00:00",
+    "level": "info",
+    "message": "Memoria eliminata: jervis_selftest",
+    "payload": null
+  },
+  {
+    "id": "045777a9-0f6a-4316-b8dd-d1b7a9f7eb76",
+    "ts": "2026-05-14T12:41:20.111982+00:00",
+    "level": "info",
+    "message": "Task creato: selftest",
+    "payload": null
+  },
+  {
+    "id": "e58b7cac-4ff9-41f4-84c6-e88e0725a850",
+    "ts": "2026-05-14T12:40:05.784988+00:00",
+    "level": "info",
+    "message": "Comando eseguito: Get-Date",
+    "payload": {
+      "returncode": 0
+    }
+  },
+  {
+    "id": "5cc12fef-c58e-4017-b9ca-d4a109cc94b5",
+    "ts": "2026-05-14T12:39:51.849315+00:00",
+    "level": "info",
+    "message": "Comando eseguito: Get-Date",
+    "payload": {
+      "returncode": 0
+    }
+  },
+  {
+    "id": "b93336ba-a1bc-443b-90cb-bd2828ab6f60",
+    "ts": "2026-05-14T12:39:07.696707+00:00",
+    "level": "info",
+    "message": "JARVIS avviato",
+    "payload": null
+  },
+  {
+    "id": "d20ee46f-137c-4eba-bc4d-e5f659505dae",
+    "ts": "2026-05-14T12:37:39.625706+00:00",
+    "level": "info",
+    "message": "Comando eseguito: Get-Date",
+    "payload": {
+      "returncode": 0
+    }
+  },
+  {
+    "id": "762083f2-cf93-4ca3-8e91-70fe899b2804",
+    "ts": "2026-05-14T12:34:28.848187+00:00",
+    "level": "info",
+    "message": "JARVIS avviato",
+    "payload": null
+  }
+]

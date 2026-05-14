@@ -1,0 +1,40 @@
+{
+  "host": "127.0.0.1",
+  "port": 8765,
+  "assistant_name": "JARVIS",
+  "wake_word": "jarvis",
+  "data_dir": "data",
+  "max_command_seconds": 20,
+  "background_tick_seconds": 1,
+  "system_monitor_seconds": 10,
+  "allow_unlisted_commands": false,
+  "ollama": {
+    "host": "http://127.0.0.1:11434",
+    "model": "llama3.2"
+  },
+  "voice": {
+    "tts_enabled": true,
+    "tts_rate": 175,
+    "browser_stt_enabled": true,
+    "push_to_talk": true
+  },
+  "monitor_thresholds": {
+    "cpu": 95,
+    "ram": 95,
+    "disk": 98
+  },
+  "allowed_commands": [
+    "dir",
+    "echo",
+    "Get-ChildItem",
+    "Get-Date",
+    "Get-Process",
+    "Get-Service",
+    "ipconfig",
+    "ping",
+    "py --version",
+    "python --version",
+    "whoami",
+    "where"
+  ]
+}

@@ -1,0 +1,9 @@
+.venv/
+.venv313/
+__pycache__/
+*.pyc
+data/*.broken
+data/*.tmp
+data/runtime/
+data/*.sqlite3
+data/*.sqlite3-*

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JARVIS Iron Man System</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <main class="hud-shell">
+      <div class="scanline"></div>
+      <div class="starfield"></div>
+
+      <header class="hud-top">
+        <nav class="quickbar" aria-label="Controlli rapidi">
+          <button id="voiceBtn" title="Ascolto continuo">MIC</button>
+          <button id="pttBtn" title="Push to talk">PTT</button>
+          <button id="voiceTestBtn" title="Test voce">VOL</button>
+          <button data-open="chat" title="Console AI">AI</button>
+        </nav>
+        <div class="brand">
+          <h1>JARVIS</h1>
+          <div id="clock">--:--:--</div>
+        </div>
+        <div class="system-online">
+          <span id="apiState">API INIT</span>
+          <span id="brainState">BRAIN INIT</span>
+          <span id="agentState">ONLINE</span>
+          <button id="refreshBtn" title="Aggiorna">SYNC</button>
+        </div>
+      </header>
+
+      <aside class="side-nav">
+        <button class="nav-card" data-open="system">
+          <span class="nav-icon">SYS</span>
+          <strong>Main Interface</strong>
+          <small>System dashboard</small>
+        </button>
+        <button class="nav-card" data-open="tools">
+          <span class="nav-icon">CMD</span>
+          <strong>System Tools</strong>
+          <small>Safe execution</small>
+        </button>
+        <button class="nav-card" data-open="chat">
+          <span class="nav-icon">AI</span>
+          <strong>AI Console</strong>
+          <small>Chat & commands</small>
+        </button>
+        <button class="nav-card" data-open="voice">
+          <span class="nav-icon">VOX</span>
+          <strong>Voice Command</strong>
+          <small>Wake word control</small>
+        </button>
+        <button class="nav-card" data-open="tasks">
+          <span class="nav-icon">AUTO</span>
+          <strong>Automation</strong>
+          <small>Alarms & tasks</small>
+        </button>
+        <button class="nav-card" data-open="memory">
+          <span class="nav-icon">MEM</span>
+          <strong>Memory</strong>
+          <small>Persistent state</small>
+        </button>
+        <button class="nav-card" data-open="events">
+          <span class="nav-icon">LOG</span>
+          <strong>Events</strong>
+          <small>Runtime history</small>
+        </button>
+      </aside>
+
+      <section class="center-stage">
+        <div class="reactor">
+          <div class="ring ring-a"></div>
+          <div class="ring ring-b"></div>
+          <div class="ring ring-c"></div>
+          <div class="core-mark">J</div>
+          <div class="beam"></div>
+        </div>
+        <div class="voice-command">
+          <div id="voiceWave" class="voice-wave" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div>
+            <strong id="voiceState">VOICE OFF</strong>
+            <span>say "JARVIS" to activate</span>
+          </div>
+        </div>
+        <div id="lastResponse" class="last-response">Sistema online. Tutte le schede sono chiuse: usa voce o apri un modulo.</div>
+      </section>
+
+      <aside class="right-stack">
+        <section class="mini-panel">
+          <header>System Overview</header>
+          <div class="mini-rings">
+            <div class="mini-ring" style="--value:0" data-label="CPU"><span id="cpu">0%</span></div>
+            <div class="mini-ring" style="--value:0" data-label="RAM"><span id="ram">0%</span></div>
+            <div class="mini-ring" style="--value:0" data-label="DISK"><span id="disk">0%</span></div>
+          </div>
+          <div class="sparkline"><i></i></div>
+        </section>
+        <section class="mini-panel">
+          <header>Active Tasks <span id="taskCount">0</span></header>
+          <div id="miniTasks" class="mini-list"></div>
+        </section>
+        <section class="mini-panel">
+          <header>Voice Recognition</header>
+          <div class="voice-meter"><i></i></div>
+          <small>Wake word: JARVIS</small>
+        </section>
+        <section class="mini-panel">
+          <header>Notifications <span id="eventCount">0</span></header>
+          <div id="miniEvents" class="mini-list"></div>
+        </section>
+      </aside>
+
+      <section class="drawer-layer" id="drawerLayer" aria-live="polite">
+        <article class="drawer-panel" data-panel="system">
+          <header><h2>Sistema</h2><button data-close>CHIUDI</button></header>
+          <dl class="metrics">
+            <div><dt>Processi</dt><dd id="processes">--</dd></div>
+            <div><dt>Python</dt><dd id="python">--</dd></div>
+            <div><dt>Runtime</dt><dd id="runtimeState">--</dd></div>
+            <div><dt>Modello</dt><dd id="modelState">--</dd></div>
+          </dl>
+        </article>
+
+        <article class="drawer-panel wide" data-panel="chat">
+          <header><h2>AI Console</h2><button data-close>CHIUDI</button></header>
+          <div id="chatLog" class="chat-log"></div>
+          <form id="chatForm" class="command-row">
+            <input id="chatInput" autocomplete="off" placeholder="Parla o scrivi a JARVIS" />
+            <label class="toggle"><input id="speakToggle" type="checkbox" checked /> voce</label>
+            <button type="submit">Invia</button>
+          </form>
+        </article>
+
+        <article class="drawer-panel" data-panel="tasks">
+          <header><h2>Automazioni</h2><button data-close>CHIUDI</button></header>
+          <form id="taskForm" class="stack">
+            <input id="taskTitle" placeholder="Titolo task" />
+            <input id="taskAction" placeholder="alarm:Sveglia | command:Get-Date | memory:key=value" />
+            <div class="split">
+              <input id="taskDelay" type="number" min="0" placeholder="Delay sec" />
+              <input id="taskInterval" type="number" min="10" placeholder="Ripeti sec" />
+            </div>
+            <button type="submit">Schedula</button>
+          </form>
+          <div id="tasks" class="list"></div>
+        </article>
+
+        <article class="drawer-panel wide" data-panel="tools">
+          <header><h2>Tool Console</h2><button data-close>CHIUDI</button></header>
+          <form id="commandForm" class="command-row no-toggle">
+            <input id="commandInput" autocomplete="off" placeholder="Get-Date" />
+            <button type="submit">Esegui</button>
+          </form>
+          <pre id="terminal">Sistema pronto.</pre>
+        </article>
+
+        <article class="drawer-panel" data-panel="voice">
+          <header><h2>Voce</h2><button data-close>CHIUDI</button></header>
+          <div class="voice-help">
+            <p>Comandi pronti:</p>
+            <code>Jarvis stato sistema</code>
+            <code>Jarvis metti una canzone napoletana</code>
+            <code>Jarvis imposta una sveglia tra 5 minuti</code>
+            <code>Jarvis imposta una sveglia alle 7:30</code>
+          </div>
+          <button id="voiceTestBtnPanel" type="button">Test voce JARVIS</button>
+        </article>
+
+        <article class="drawer-panel" data-panel="memory">
+          <header><h2>Memoria</h2><button data-close>CHIUDI</button></header>
+          <form id="memoryForm" class="stack">
+            <input id="memoryKey" placeholder="chiave" />
+            <textarea id="memoryValue" placeholder="valore persistente"></textarea>
+            <button type="submit">Salva</button>
+          </form>
+          <div id="memoryList" class="list compact"></div>
+          <span class="hidden-counter" id="memoryCount">0</span>
+        </article>
+
+        <article class="drawer-panel wide" data-panel="events">
+          <header><h2>Eventi</h2><button data-close>CHIUDI</button></header>
+          <div id="events" class="event-list"></div>
+        </article>
+      </section>
+    </main>
+    <script src="/static/app.js"></script>
+  </body>
+</html>
